@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"leobelini/cashly/config"
 	docs "leobelini/cashly/docs"
+	"leobelini/cashly/internal/integration"
 	"leobelini/cashly/internal/routers"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +15,11 @@ import (
 func main() {
 	config.LoadServerEnv()
 	env := config.GetServerEnv()
+
+	// Load database
+	if err := integration.StartDatabase(); err != nil {
+		panic(err)
+	}
 
 	r := gin.Default()
 	routers.LoadRouters(r)
