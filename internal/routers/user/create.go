@@ -1,16 +1,14 @@
 package user
 
 import (
-	"errors"
-	"fmt"
+	"leobelini/cashly/internal/types/database"
+	"leobelini/cashly/internal/utils"
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-)
+	_userController "leobelini/cashly/internal/controller/user"
 
-// Validator instance (pode ficar global)
-var validate = validator.New()
+	"github.com/gin-gonic/gin"
+)
 
 // UserRequest representa os dados de entrada
 type UserRequest struct {
@@ -26,11 +24,6 @@ type UserResponse struct {
 	Email string `json:"email"`
 }
 
-// ErrorResponse padrão para erros
-type ErrorResponse struct {
-	Message string `json:"message"`
-}
-
 // createUser godoc
 // @Summary      Cria um usuário
 // @Description  Cria um usuário com nome, email e senha
@@ -39,32 +32,24 @@ type ErrorResponse struct {
 // @Produce      json
 // @Param        user  body      UserRequest  true  "Dados do usuário"
 // @Success      201   {object}  UserResponse
-// @Failure      400   {object}  ErrorResponse
+// @Failure      400   {object}  api.ErrorResponse
 // @Router       /user [post]
 func createUser(c *gin.Context) {
 	var req UserRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		var ve validator.ValidationErrors
-		if errors.As(err, &ve) {
-			out := make([]string, len(ve))
-			for i, fe := range ve {
-				out[i] = fmt.Sprintf("Campo '%s' falhou na validação '%s'", fe.Field(), fe.Tag())
-			}
-			c.JSON(http.StatusBadRequest, gin.H{"errors": out})
-			return
-		}
-
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+		utils.HandleValidationError(c, err)
 		return
 	}
 
-	// Sucesso
-	user := UserResponse{
-		ID:    "123",
-		Name:  req.Name,
-		Email: req.Email,
+	userController := &_userController.UserController{}
+	createdUser, err := userController.CreateUser(&database.User{Name: req.Name, Email: req.Email, Password: req.Password})
+	if err != nil {
+		utils.HandleValidationError(c, err)
+		return
 	}
+
+	user := UserResponse{ID: createdUser.ID, Name: createdUser.Name, Email: createdUser.Email}
 
 	c.JSON(http.StatusCreated, user)
 }
