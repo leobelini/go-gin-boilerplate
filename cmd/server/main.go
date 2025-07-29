@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 	"leobelini/cashly/config"
+	docs "leobelini/cashly/docs"
 	"leobelini/cashly/internal/routers"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -13,9 +16,10 @@ func main() {
 	env := config.GetServerEnv()
 
 	r := gin.Default()
-	routes := r.Group("/v1")
+	routers.LoadRouters(r)
 
-	routers.LoadRouters(routes)
+	docs.SwaggerInfo.BasePath = "/v1"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	url := fmt.Sprintf("%s:%d", env.Host, env.Port)
 	fmt.Println("Server running at", url)
