@@ -11,7 +11,7 @@ type ServerEnv struct {
 	Host string
 }
 
-var config ServerEnv
+var serverConfig ServerEnv
 
 func LoadServerEnv() {
 	viper.SetConfigName("env")
@@ -23,12 +23,12 @@ func LoadServerEnv() {
 		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
 
-	config = ServerEnv{
+	serverConfig = ServerEnv{
 		Port: viper.GetInt("server.port"),
 		Host: viper.GetString("server.host"),
 	}
 }
 
 func GetServerEnv() ServerEnv {
-	return config
+	return serverConfig
 }
