@@ -10,14 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// UserRequest representa os dados de entrada
 type UserRequest struct {
 	Name     string `json:"name" binding:"required" validate:"min=3,max=50"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
-// UserResponse representa os dados de saída
 type UserResponse struct {
 	ID    string `json:"id"`
 	Name  string `json:"name"`
