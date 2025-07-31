@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"leobelini/cashly/config"
 	docs "leobelini/cashly/docs"
+	"leobelini/cashly/internal/handler/http"
+	"leobelini/cashly/internal/infra"
 	"leobelini/cashly/internal/integration"
-	"leobelini/cashly/internal/routers"
+	"leobelini/cashly/internal/usecase"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -17,12 +19,18 @@ func main() {
 	env := config.GetServerEnv()
 
 	// Load database
-	if err := integration.StartDatabase(); err != nil {
+	dbGorm, err := integration.StartDatabase()
+	if err != nil {
 		panic(err)
 	}
 
+	gormRepository := infra.NewRepositoryGorm(dbGorm)
+	useCaseApp := usecase.NewUseCase(gormRepository)
+
 	r := gin.Default()
-	routers.LoadRouters(r)
+
+	handler := http.NewRoutersHandler(useCaseApp)
+	handler.LoadRouters(r)
 
 	docs.SwaggerInfo.BasePath = "/v1"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

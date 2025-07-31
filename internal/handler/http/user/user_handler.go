@@ -1,25 +1,25 @@
 package user
 
 import (
-	"leobelini/cashly/internal/types/database"
+	usecase "leobelini/cashly/internal/usecase/user"
 	"leobelini/cashly/internal/utils"
 	"net/http"
-
-	_userController "leobelini/cashly/internal/controller/user"
 
 	"github.com/gin-gonic/gin"
 )
 
-type UserRequest struct {
+type CreateUserRequest struct {
 	Name     string `json:"name" binding:"required" validate:"min=3,max=50"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
-type UserResponse struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+type UserHandler struct {
+	userUseCase *usecase.UserUseCase
+}
+
+func NewUserHandler(userUseCase *usecase.UserUseCase) *UserHandler {
+	return &UserHandler{userUseCase: userUseCase}
 }
 
 // createUser godoc
@@ -32,22 +32,19 @@ type UserResponse struct {
 // @Success      201   {object}  UserResponse
 // @Failure      400   {object}  api.ErrorResponse
 // @Router       /user [post]
-func createUser(c *gin.Context) {
-	var req UserRequest
+func (h *UserHandler) CreateUser(c *gin.Context) {
+	var req CreateUserRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		utils.HandleValidationError(c, err)
 		return
 	}
 
-	userController := &_userController.UserController{}
-	createdUser, err := userController.CreateUser(&database.User{Name: req.Name, Email: req.Email, Password: req.Password})
-	if err != nil {
+	if err := h.userUseCase.CreateUser.Execute(c, req.Name, req.Email, req.Password); err != nil {
 		utils.HandleValidationError(c, err)
 		return
 	}
 
-	user := UserResponse{ID: createdUser.ID, Name: createdUser.Name, Email: createdUser.Email}
+	c.JSON(http.StatusCreated, nil)
 
-	c.JSON(http.StatusCreated, user)
 }

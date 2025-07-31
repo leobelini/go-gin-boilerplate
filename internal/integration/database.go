@@ -1,38 +1,32 @@
 package integration
 
 import (
-	"context"
 	"leobelini/cashly/config"
-	"leobelini/cashly/internal/types/database"
+	domainUser "leobelini/cashly/internal/domain/user"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	_ "modernc.org/sqlite"
 )
 
-var Db *gorm.DB
-var DbCtx context.Context
-
-func StartDatabase() error {
+func StartDatabase() (*gorm.DB, error) {
 	config.LoadDatabaseEnv()
 
 	env := config.GetDatabaseEnv()
 
-	var err error
-	Db, err = gorm.Open(sqlite.Dialector{
+	db, err := gorm.Open(sqlite.Dialector{
 		DriverName: "sqlite", // ou outro nome registrado
 		DSN:        env.Filename,
 	}, &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if env.AutoMigrate {
-		Db.AutoMigrate(&database.User{})
+		db.AutoMigrate(&domainUser.User{})
 	}
-	DbCtx = context.Background()
 
-	return nil
+	return db, nil
 }
