@@ -28,8 +28,8 @@ func NewUserHandler(userUseCase *usecase.UserUseCase) *UserHandler {
 // @Tags         usuários
 // @Accept       json
 // @Produce      json
-// @Param        user  body      UserRequest  true  "Dados do usuário"
-// @Success      201   {object}  UserResponse
+// @Param        user  body      CreateUserRequest  true  "Dados do usuário"
+// @Success      201   {object}  user.User
 // @Failure      400   {object}  api.ErrorResponse
 // @Router       /user [post]
 func (h *UserHandler) CreateUser(c *gin.Context) {
@@ -45,6 +45,15 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, nil)
+	user, err := h.userUseCase.GetByEmailUser.Execute(c, req.Email)
+	if err != nil {
+		utils.HandleValidationError(c, err)
+		return
+	}
+
+	user.Password = ""
+	user.Token = ""
+
+	c.JSON(http.StatusCreated, user)
 
 }

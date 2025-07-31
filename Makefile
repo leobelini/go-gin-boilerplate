@@ -1,5 +1,5 @@
 # Caminho para o arquivo principal com as anotações Swagger
-SWAGGER_MAIN=internal/routers/routers.go
+SWAGGER_MAIN=internal/handler/http/handler.go
 
 # Nome do binário (ajuste se quiser gerar executável)
 BINARY_NAME=cashly

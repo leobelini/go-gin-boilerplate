@@ -11,9 +11,12 @@ type UserRepository interface {
 }
 
 type UserUseCase struct {
-	CreateUser *CreateUserUseCase
+	CreateUser     *CreateUserUseCase
+	GetByEmailUser *GetByEmailUserUseCase
 }
 
 func NewUserUseCase(repo UserRepository) *UserUseCase {
-	return &UserUseCase{CreateUser: NewCreateUserUseCase(repo)}
+	return &UserUseCase{
+		CreateUser:     NewCreateUserUseCase(repo),
+		GetByEmailUser: NewGetByEmailUserUseCase(repo)}
 }
