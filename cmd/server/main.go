@@ -24,6 +24,9 @@ func main() {
 		panic(err)
 	}
 
+	// Load Job
+	job := integration.StartJob()
+
 	gormRepository := infra.NewRepositoryGorm(dbGorm)
 	useCaseApp := usecase.NewUseCase(gormRepository)
 

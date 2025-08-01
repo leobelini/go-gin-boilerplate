@@ -45,5 +45,19 @@ func (uc *CreateUserUseCase) Execute(ctx context.Context, name, email, password 
 		Token:           uuid.New().String(),
 	}
 
-	return uc.repo.Save(ctx, user)
+	if err := uc.repo.Save(ctx, user); err != nil {
+		return err
+	}
+
+	userRegistered, err := uc.repo.GetByEmail(ctx, email)
+	if err != nil {
+		return err
+	}
+
+	if userRegistered == (domainUser.User{}) {
+		return utils.CreateAppError("USER_NOT_FOUND", false)
+	}
+	// uc.job.SendConfirmationEmailRegister.SendConfirmationEmailRegister(ctx, userRegistered.Email, userRegistered.Name, userRegistered.Token)
+
+	return nil
 }
