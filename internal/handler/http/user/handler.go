@@ -11,5 +11,5 @@ func NewRoutersHandler(routerGroup *gin.RouterGroup, userUseCase *userUseCase.Us
 
 	userHandler := NewUserHandler(userUseCase)
 
-	userRouter.POST("/", userHandler.CreateUser)
+	userRouter.POST("/", userHandler.UserCreate)
 }
