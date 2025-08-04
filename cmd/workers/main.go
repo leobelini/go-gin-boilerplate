@@ -2,17 +2,17 @@ package main
 
 import (
 	"fmt"
-	"leobelini/cashly/config"
+	"leobelini/cashly/internal/core"
 	confirmemailregister "leobelini/cashly/internal/job/confirm_email_register"
 
 	"github.com/hibiken/asynq"
 )
 
 func main() {
-	config.LoadRedisEnv()
-	env := config.GetRedisEnv()
+	baseApp := core.NewBaseApp()
+	env := baseApp.Env
 
-	addr := env.Host + ":" + env.Port
+	addr := fmt.Sprintf("%s:%d", env.Redis.Host, env.Redis.Port)
 
 	srv := asynq.NewServer(asynq.RedisClientOpt{Addr: addr},
 		asynq.Config{Concurrency: 10})

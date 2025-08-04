@@ -19,14 +19,11 @@ type AppServer struct {
 }
 
 func NewAppServer(ginEngine *gin.Engine) *AppServer {
-	env, err := app.LoadEnv()
-	if err != nil {
-		panic(err)
-	}
+	baseApp := NewBaseApp()
+	env := baseApp.Env
+	dataBase := baseApp.Database
 
-	dataBase := app.NewDatabase(env)
 	job := app.NewJob(env)
-
 	return &AppServer{ginEngine: ginEngine, Env: env, Database: dataBase, Job: job.Client}
 }
 
@@ -34,7 +31,7 @@ func (s *AppServer) StartServer() {
 	app.LoadEnv()
 
 	if !s.Env.IsProd {
-		startSwagger(s.ginEngine)
+		startSwagger(s.ginEngine, s.Env)
 		s.ginEngine.Use(gin.Logger())
 	}
 
