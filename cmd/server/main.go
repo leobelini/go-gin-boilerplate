@@ -1,47 +1,35 @@
 package main
 
 import (
-	"fmt"
-	"leobelini/cashly/config"
-	docs "leobelini/cashly/docs"
-	"leobelini/cashly/internal/handler/http"
-	"leobelini/cashly/internal/infra"
-	"leobelini/cashly/internal/integration"
-	"leobelini/cashly/internal/usecase"
+	"leobelini/cashly/internal/controller"
+	"leobelini/cashly/internal/core"
+	"leobelini/cashly/internal/entity"
+	"leobelini/cashly/internal/job"
+	"leobelini/cashly/internal/model"
+	"leobelini/cashly/internal/router"
 
 	"github.com/gin-gonic/gin"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
-	config.LoadServerEnv()
-	env := config.GetServerEnv()
-
-	// Load database
-	dbGorm, err := integration.StartDatabase()
-	if err != nil {
-		panic(err)
-	}
-
-	// Load Job
-	job := integration.StartJob()
-
-	gormRepository := infra.NewRepositoryGorm(dbGorm)
-	useCaseApp := usecase.NewUseCase(gormRepository)
 
 	r := gin.Default()
+	server := core.NewAppServer(r)
 
-	handler := http.NewRoutersHandler(useCaseApp)
-	handler.LoadRouters(r)
+	// Load database
+	server.Database.Start()
+	defer server.Database.Close()
 
-	docs.SwaggerInfo.BasePath = "/v1"
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	url := fmt.Sprintf("%s:%d", env.Host, env.Port)
-	fmt.Println("Server running at", url)
-
-	if err := r.Run(url); err != nil {
-		fmt.Println("Failed to start server:", err)
+	if server.Env.Database.AutoMigrate {
+		server.Database.Migrate(&entity.User{})
 	}
+
+	job := job.NewJob(server.Job)
+
+	models := model.LoadModels(server.Database.Db)
+	controllers := controller.NewController(models, job, server.Env)
+
+	router.NewRouter(r, controllers)
+
+	server.StartServer()
 }
