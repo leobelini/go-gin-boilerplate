@@ -1,8 +1,8 @@
-package confirmemailregister
+package dto
 
 const TypeSendConfirmationEmail = "email:send_confirmation_email"
 
-type Payload struct {
+type SendConfirmationEmailRegisterPayload struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Token string `json:"token"`

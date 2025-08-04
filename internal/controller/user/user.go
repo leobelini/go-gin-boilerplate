@@ -2,8 +2,8 @@ package user
 
 import (
 	"leobelini/cashly/internal/core/dto"
-	"leobelini/cashly/internal/job"
 	"leobelini/cashly/internal/model"
+	"leobelini/cashly/internal/queue/job"
 )
 
 type UserController struct {

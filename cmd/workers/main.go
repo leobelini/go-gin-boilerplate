@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"leobelini/cashly/internal/controller"
 	"leobelini/cashly/internal/core"
-	confirmemailregister "leobelini/cashly/internal/job/confirm_email_register"
+	"leobelini/cashly/internal/model"
+	"leobelini/cashly/internal/queue/job"
+	"leobelini/cashly/internal/queue/worker"
 
 	"github.com/hibiken/asynq"
 )
@@ -11,6 +14,8 @@ import (
 func main() {
 	baseApp := core.NewBaseApp()
 	env := baseApp.Env
+	dataBase := baseApp.Database
+	job := job.NewJob(baseApp.Job)
 
 	addr := fmt.Sprintf("%s:%d", env.Redis.Host, env.Redis.Port)
 
@@ -19,8 +24,9 @@ func main() {
 
 	mux := asynq.NewServeMux()
 
-	mux.HandleFunc(confirmemailregister.TypeSendConfirmationEmail, confirmemailregister.NewWorker)
-	fmt.Println("Worker ", confirmemailregister.TypeSendConfirmationEmail, " registered")
+	models := model.LoadModels(dataBase.Db)
+	controllers := controller.NewController(models, job, env)
+	worker.RegisterWorkers(mux, controllers)
 
 	if err := srv.Run(mux); err != nil {
 		panic(err)

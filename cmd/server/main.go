@@ -4,8 +4,8 @@ import (
 	"leobelini/cashly/internal/controller"
 	"leobelini/cashly/internal/core"
 	"leobelini/cashly/internal/entity"
-	"leobelini/cashly/internal/job"
 	"leobelini/cashly/internal/model"
+	"leobelini/cashly/internal/queue/job"
 	"leobelini/cashly/internal/router"
 
 	"github.com/gin-gonic/gin"

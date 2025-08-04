@@ -3,8 +3,8 @@ package controller
 import (
 	"leobelini/cashly/internal/controller/user"
 	"leobelini/cashly/internal/core/dto"
-	"leobelini/cashly/internal/job"
 	"leobelini/cashly/internal/model"
+	"leobelini/cashly/internal/queue/job"
 )
 
 type Controller struct {

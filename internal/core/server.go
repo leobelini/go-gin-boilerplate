@@ -22,9 +22,9 @@ func NewAppServer(ginEngine *gin.Engine) *AppServer {
 	baseApp := NewBaseApp()
 	env := baseApp.Env
 	dataBase := baseApp.Database
+	job := baseApp.Job
 
-	job := app.NewJob(env)
-	return &AppServer{ginEngine: ginEngine, Env: env, Database: dataBase, Job: job.Client}
+	return &AppServer{ginEngine: ginEngine, Env: env, Database: dataBase, Job: job}
 }
 
 func (s *AppServer) StartServer() {

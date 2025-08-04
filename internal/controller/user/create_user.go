@@ -51,7 +51,7 @@ func (c *UserController) CreateUser(name, email, password string, ctx context.Co
 			return utils.CreateAppError("USER_NOT_FOUND", false)
 		}
 
-		c.job.SendConfirmationEmailRegister.SendConfirmationEmailRegister(ctx, email, name, userRegistered.Token)
+		c.job.SendConfirmationEmailRegister.AddQueue(ctx, email, name, userRegistered.Token)
 
 		return nil
 	})
