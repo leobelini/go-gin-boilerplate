@@ -2,11 +2,23 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Cashly (main.go)",
+      "name": "Server Cashly",
       "type": "go",
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/cmd/server",
+      "env": {},
+      "args": [],
+      "buildFlags": "",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Worker Cashly",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/cmd/workers",
       "env": {},
       "args": [],
       "buildFlags": "",

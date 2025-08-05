@@ -20,7 +20,7 @@ type CreateUserRequest struct {
 // @Accept       json
 // @Produce      json
 // @Param        user  body      CreateUserRequest  true  "Dados do usuário"
-// @Success      201   {object}  user.User
+// @Success      201   {object}  entity.User
 // @Failure      400   {object}  api.ErrorResponse
 // @Router       /user [post]
 func (h *UserHandler) CreateUser(c *gin.Context) {

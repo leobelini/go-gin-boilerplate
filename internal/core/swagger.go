@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	_ "leobelini/cashly/docs"
 	"leobelini/cashly/internal/core/dto"
 
 	"github.com/gin-gonic/gin"

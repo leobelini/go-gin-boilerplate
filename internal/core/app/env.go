@@ -30,6 +30,14 @@ func LoadEnv() (*dto.DtoEnvApp, error) {
 			Port: viper.GetInt("redis.port"),
 		},
 		IsProd: viper.GetBool("isProduction"),
+		App: dto.DtoEnvAppApp{
+			Name: viper.GetString("app.name"),
+			URL:  viper.GetString("app.url"),
+		},
+		Smtp: dto.DtoEnvAppSmtp{
+			Host: viper.GetString("smtp.host"),
+			Port: viper.GetInt("smtp.port"),
+		},
 	}
 
 	return &AppEnv, nil

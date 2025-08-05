@@ -21,6 +21,7 @@ func NewBaseApp() *BaseApp {
 
 	dataBase := app.NewDatabase(env)
 	job := app.NewJob(env)
+	job.StartJob()
 
 	return &BaseApp{Database: dataBase, Env: env, Job: job.Client}
 }

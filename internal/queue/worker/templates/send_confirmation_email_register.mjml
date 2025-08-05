@@ -1,0 +1,17 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="20px" color="#F45E43" font-family="helvetica">Bem vindo!</mj-text>
+        <mj-text font-family="helvetica">Olá <b>{{.Name}}</b>. Seu cadastro está quase finalizado no <b>{{.AppName}}</b>. Seu último passo é:</mj-text>
+        
+        <mj-divider border-color="#F45E43"></mj-divider>
+        
+        <mj-button font-family="Helvetica" background-color="#f45e43" color="white" href="{{.TokenUrl}}">
+          Clicar aqui
+         </mj-button>
+        
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
