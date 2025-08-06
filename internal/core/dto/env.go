@@ -23,6 +23,7 @@ type DtoEnvAppApp struct {
 type DtoEnvAppSmtp struct {
 	Host string
 	Port int
+	From string
 }
 
 type DtoEnvApp struct {

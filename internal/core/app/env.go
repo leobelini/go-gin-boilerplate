@@ -37,6 +37,7 @@ func LoadEnv() (*dto.DtoEnvApp, error) {
 		Smtp: dto.DtoEnvAppSmtp{
 			Host: viper.GetString("smtp.host"),
 			Port: viper.GetInt("smtp.port"),
+			From: viper.GetString("smtp.from"),
 		},
 	}
 
