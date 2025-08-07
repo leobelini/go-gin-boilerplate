@@ -31,7 +31,7 @@ func (w *Worker) SendConfirmationEmailRegisterWorker(ctx context.Context, t *asy
 	payloadTemplate := PayloadSendConfirmationEmailRegister{
 		Name:     payload.Name,
 		AppName:  w.app.Env.App.Name,
-		TokenUrl: fmt.Sprintf("%s/confirm?token=%s", w.app.Env.App.URL, payload.Token),
+		TokenUrl: fmt.Sprintf("%s/sign-up/%s", w.app.Env.App.URL, payload.Token),
 	}
 
 	err := utils.SendEmail(templateSendConfirmationEmailRegister, payloadTemplate, w.app.Env, utils.SendEmailParams{To: payload.Email, Ctx: ctx, Subject: "Confirmação de Cadastro"})
