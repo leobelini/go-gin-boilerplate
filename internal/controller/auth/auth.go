@@ -1,17 +1,13 @@
 package auth
 
 import (
-	"leobelini/cashly/internal/core/dto"
-	"leobelini/cashly/internal/model"
-	"leobelini/cashly/internal/queue/job"
+	internalDto "leobelini/cashly/internal/dto"
 )
 
 type AuthController struct {
-	model *model.Model
-	job   *job.Job
-	env   *dto.DtoEnvApp
+	app *internalDto.DtoApp
 }
 
-func NewAuthController(model *model.Model, job *job.Job, env *dto.DtoEnvApp) *AuthController {
-	return &AuthController{model: model, job: job, env: env}
+func NewAuthController(app *internalDto.DtoApp) *AuthController {
+	return &AuthController{app: app}
 }

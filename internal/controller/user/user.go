@@ -1,17 +1,13 @@
 package user
 
 import (
-	"leobelini/cashly/internal/core/dto"
-	"leobelini/cashly/internal/model"
-	"leobelini/cashly/internal/queue/job"
+	internalDto "leobelini/cashly/internal/dto"
 )
 
 type UserController struct {
-	model *model.Model
-	job   *job.Job
-	env   *dto.DtoEnvApp
+	app *internalDto.DtoApp
 }
 
-func NewUserController(model *model.Model, job *job.Job, env *dto.DtoEnvApp) *UserController {
-	return &UserController{model: model, job: job, env: env}
+func NewUserController(app *internalDto.DtoApp) *UserController {
+	return &UserController{app: app}
 }

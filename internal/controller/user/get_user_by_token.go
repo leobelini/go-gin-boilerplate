@@ -8,7 +8,7 @@ import (
 
 func (c *UserController) GetUserByToken(token string, ctx context.Context) (entity.User, error) {
 
-	user, err := c.model.User.GetByTokenUser(token, ctx)
+	user, err := c.app.Model.User.GetByTokenUser(token, ctx)
 	if err != nil {
 		return entity.User{}, err
 	}

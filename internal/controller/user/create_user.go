@@ -13,8 +13,8 @@ import (
 
 func (c *UserController) CreateUser(name, email, password string, ctx context.Context) error {
 
-	return c.model.Transaction(func(tx *model.Model) error {
-		userExists, err := c.model.User.GetByEmailUser(email, ctx)
+	return c.app.Model.Transaction(func(tx *model.Model) error {
+		userExists, err := c.app.Model.User.GetByEmailUser(email, ctx)
 		if err != nil {
 			return err
 		}
@@ -28,6 +28,8 @@ func (c *UserController) CreateUser(name, email, password string, ctx context.Co
 			return err
 		}
 
+		token := uuid.New().String()
+
 		user := entity.User{
 			ID:              uuid.New().String(),
 			Name:            name,
@@ -35,14 +37,14 @@ func (c *UserController) CreateUser(name, email, password string, ctx context.Co
 			CreatedAt:       time.Now(),
 			Password:        string(bytesPassword),
 			AccountVerified: false,
-			Token:           uuid.New().String(),
+			Token:           &token,
 		}
 
-		if err := c.model.User.CreateUser(user, ctx); err != nil {
+		if err := c.app.Model.User.CreateUser(user, ctx); err != nil {
 			return err
 		}
 
-		userRegistered, err := c.model.User.GetByEmailUser(email, ctx)
+		userRegistered, err := c.app.Model.User.GetByEmailUser(email, ctx)
 		if err != nil {
 			return err
 		}
@@ -51,7 +53,7 @@ func (c *UserController) CreateUser(name, email, password string, ctx context.Co
 			return utils.CreateAppError("USER_NOT_FOUND", false)
 		}
 
-		if err := c.job.SendConfirmationEmailRegister.AddQueue(ctx, email, name, userRegistered.Token); err != nil {
+		if err := c.app.Job.SendConfirmationEmailRegister.AddQueue(ctx, email, name, *userRegistered.Token); err != nil {
 			return err
 		}
 		return nil

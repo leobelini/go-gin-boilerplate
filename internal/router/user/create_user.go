@@ -44,7 +44,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	}
 
 	user.Password = ""
-	user.Token = ""
+	user.Token = nil
 
 	c.JSON(http.StatusCreated, user)
 }

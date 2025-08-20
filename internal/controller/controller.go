@@ -17,11 +17,14 @@ type Controller struct {
 
 func NewController(model *model.Model, job *job.Job, env *dto.DtoEnvApp) *Controller {
 
-	app := &internalDto.DtoApp{Env: env, Job: job}
+	app := &internalDto.DtoApp{Env: env, Job: job, Model: model}
+
+	userC := user.NewUserController(app)
+	authC := auth.NewAuthController(app)
 
 	return &Controller{
-		User: user.NewUserController(model, job, env),
-		Auth: auth.NewAuthController(model, job, env),
+		User: userC,
+		Auth: authC,
 		App:  app,
 	}
 }

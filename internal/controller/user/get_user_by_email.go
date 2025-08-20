@@ -8,7 +8,7 @@ import (
 
 func (c *UserController) GetUserByEmail(email string, ctx context.Context) (entity.User, error) {
 
-	user, err := c.model.User.GetByEmailUser(email, ctx)
+	user, err := c.app.Model.User.GetByEmailUser(email, ctx)
 	if err != nil {
 		return entity.User{}, err
 	}
