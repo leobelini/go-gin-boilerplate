@@ -15,5 +15,5 @@ func NewUserHandler(group *gin.RouterGroup, controllers *controller.Controller) 
 
 	handler := &UserHandler{controllers: controllers}
 
-	router.POST("/", handler.CreateUser)
+	router.POST("", handler.CreateUser)
 }

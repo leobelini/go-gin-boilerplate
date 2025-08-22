@@ -6,15 +6,11 @@ import (
 	"leobelini/cashly/internal/entity"
 	"leobelini/cashly/internal/model"
 	"leobelini/cashly/internal/queue/job"
-	"leobelini/cashly/internal/router"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
-	r := gin.Default()
-	server := core.NewAppServer(r)
+	server := core.NewAppServer()
 
 	// Load database
 	server.Database.Start()
@@ -29,7 +25,7 @@ func main() {
 	models := model.LoadModels(server.Database.Db)
 	controllers := controller.NewController(models, job, server.Env)
 
-	router.NewRouter(r, controllers)
+	server.SetupRoutes(controllers)
 
 	server.StartServer()
 }
