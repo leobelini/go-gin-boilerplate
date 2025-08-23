@@ -14,22 +14,22 @@ import (
 func (c *UserController) CreateUser(name, email, password string, ctx context.Context) error {
 
 	return c.app.Model.Transaction(func(tx *model.Model) error {
-		userExists, err := c.app.Model.User.GetByEmailUser(email, ctx)
+		// Verifica se já existe
+		userExists, err := tx.User.GetByEmailUser(email, ctx)
 		if err != nil {
 			return err
 		}
-
 		if userExists != (entity.User{}) {
 			return utils.CreateAppError("USER_ALREADY_EXISTS", false)
 		}
 
+		// Criptografa a senha
 		bytesPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			return err
 		}
 
 		token := uuid.New().String()
-
 		user := entity.User{
 			ID:              uuid.New().String(),
 			Name:            name,
@@ -40,22 +40,16 @@ func (c *UserController) CreateUser(name, email, password string, ctx context.Co
 			Token:           &token,
 		}
 
-		if err := c.app.Model.User.CreateUser(user, ctx); err != nil {
+		// Cria usuário no banco
+		if err := tx.User.CreateUser(user, ctx); err != nil {
 			return err
 		}
 
-		userRegistered, err := c.app.Model.User.GetByEmailUser(email, ctx)
-		if err != nil {
-			return err
+		// Envia para a fila – se falhar, retorna erro para cancelar a transação
+		if err := c.app.Job.SendConfirmationEmailRegister.AddQueue(ctx, user.Email, user.Name, *user.Token); err != nil {
+			return err // rollback será disparado
 		}
 
-		if userRegistered == (entity.User{}) {
-			return utils.CreateAppError("USER_NOT_FOUND", false)
-		}
-
-		if err := c.app.Job.SendConfirmationEmailRegister.AddQueue(ctx, email, name, *userRegistered.Token); err != nil {
-			return err
-		}
 		return nil
 	})
 
