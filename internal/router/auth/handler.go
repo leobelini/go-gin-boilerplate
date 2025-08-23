@@ -16,4 +16,6 @@ func NewAuthHandler(group *gin.RouterGroup, controllers *controller.Controller) 
 	handler := &AuthHandler{controllers: controllers}
 
 	router.PUT("/sign-up-confirm/:token", handler.SignUpConfirm)
+	router.POST("/password-recovery", handler.PasswordRecovery)
+	router.PUT("/reset-password/:token", handler.ResetPassword)
 }

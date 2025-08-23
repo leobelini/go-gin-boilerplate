@@ -46,7 +46,7 @@ func (c *UserController) CreateUser(name, email, password string, ctx context.Co
 		}
 
 		// Envia para a fila – se falhar, retorna erro para cancelar a transação
-		if err := c.app.Job.SendConfirmationEmailRegister.AddQueue(ctx, user.Email, user.Name, *user.Token); err != nil {
+		if err := c.app.Job.RecoveryPassword(ctx, user.Email, user.Name, *user.Token); err != nil {
 			return err // rollback será disparado
 		}
 
