@@ -11,6 +11,7 @@ type User struct {
 	Password        string    `json:"password,omitempty"`
 	AccountVerified bool      `json:"accountVerified,omitempty"`
 	Token           *string   `json:"token,omitempty"`
+	TokenPassword   *string   `json:"tokenPassword,omitempty"`
 	CreatedAt       time.Time `json:"createdAt"`
 }
 

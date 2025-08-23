@@ -8,8 +8,8 @@ import (
 	"github.com/hibiken/asynq"
 )
 
-func (d *Job) ConfirmEmailRegister(ctx context.Context, email, name, token string) error {
-	payload, err := json.Marshal(dto.SendConfirmationEmailRegisterPayload{
+func (d *Job) RecoveryPassword(ctx context.Context, email, name, token string) error {
+	payload, err := json.Marshal(dto.SendRecoveryPasswordPayload{
 		Token: token,
 		Email: email,
 		Name:  name,
@@ -18,7 +18,7 @@ func (d *Job) ConfirmEmailRegister(ctx context.Context, email, name, token strin
 		return err
 	}
 
-	task := asynq.NewTask(dto.TypeSendConfirmationEmail, payload)
+	task := asynq.NewTask(dto.TypeSendRecoveryPasswordEmail, payload)
 	_, err = d.client.EnqueueContext(ctx, task)
 	return err
 }

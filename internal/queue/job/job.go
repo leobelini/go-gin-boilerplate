@@ -4,10 +4,8 @@ import (
 	"github.com/hibiken/asynq"
 )
 
-type Job struct {
-	SendConfirmationEmailRegister *SendConfirmationEmailRegisterDispatcher
-}
+type Job struct{ client *asynq.Client }
 
 func NewJob(redisClient *asynq.Client) *Job {
-	return &Job{SendConfirmationEmailRegister: SendConfirmationEmailRegisterQueue(redisClient)}
+	return &Job{client: redisClient}
 }

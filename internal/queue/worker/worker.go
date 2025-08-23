@@ -21,4 +21,7 @@ func RegisterWorkers(mux *asynq.ServeMux, controllers *controller.Controller) {
 	mux.HandleFunc(dto.TypeSendConfirmationEmail, workers.SendConfirmationEmailRegisterWorker)
 	fmt.Println("Worker ", dto.TypeSendConfirmationEmail, " registered")
 
+	mux.HandleFunc(dto.TypeSendRecoveryPasswordEmail, workers.RecoveryPassword)
+	fmt.Println("Worker ", dto.TypeSendRecoveryPasswordEmail, " registered")
+
 }
