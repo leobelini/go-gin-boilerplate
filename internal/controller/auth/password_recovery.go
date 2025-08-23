@@ -27,6 +27,10 @@ func (c *AuthController) PasswordRecovery(email string, ctx context.Context) err
 			return err
 		}
 
+		if err := c.app.Job.RecoveryPassword(ctx, user.Email, user.Name, *user.TokenPassword); err != nil {
+			return err // rollback será disparado
+		}
+
 		return nil
 	})
 }
