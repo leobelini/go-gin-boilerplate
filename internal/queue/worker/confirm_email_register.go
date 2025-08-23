@@ -39,5 +39,7 @@ func (w *Worker) SendConfirmationEmailRegisterWorker(ctx context.Context, t *asy
 		return fmt.Errorf("erro ao enviar e-mail: %w", err)
 	}
 
+	fmt.Printf("✅ E-mail de boas-vindas enviado para %s <%s>\n", payload.Name, payload.Email)
+
 	return nil
 }

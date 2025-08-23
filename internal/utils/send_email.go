@@ -18,6 +18,8 @@ type SendEmailParams struct {
 }
 
 func SendEmail(temp string, payload interface{}, env *dto.DtoEnvApp, params SendEmailParams) error {
+
+	// 1️⃣ Renderiza o template MJML )
 	tpl, err := template.New("email").Parse(temp)
 	if err != nil {
 		return err
@@ -34,14 +36,16 @@ func SendEmail(temp string, payload interface{}, env *dto.DtoEnvApp, params Send
 		return err
 	}
 
+	fromHeader := fmt.Sprintf("Cashly <%s>", env.Smtp.From)
+
 	msg := []byte(fmt.Sprintf(
 		"From: %s\r\n"+
 			"To: %s\r\n"+
-			"Subject: Confirmação de Cadastro\r\n"+
+			"Subject: %s\r\n"+
 			"MIME-Version: 1.0\r\n"+
 			"Content-Type: text/html; charset=UTF-8\r\n"+
 			"\r\n%s",
-		env.Smtp.From, params.To, html,
+		fromHeader, params.To, params.Subject, html,
 	))
 
 	addr := fmt.Sprintf("%s:%d", env.Smtp.Host, env.Smtp.Port)

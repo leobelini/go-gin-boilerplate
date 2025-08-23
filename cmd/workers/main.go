@@ -31,6 +31,4 @@ func main() {
 	if err := srv.Run(mux); err != nil {
 		panic(err)
 	}
-	fmt.Println("Server started")
-
 }
