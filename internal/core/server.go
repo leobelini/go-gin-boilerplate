@@ -21,11 +21,16 @@ type AppServer struct {
 }
 
 func NewAppServer() *AppServer {
-	// Criar engine manualmente (gin.New) para controlar middleware
-	engine := gin.New()
 
 	baseApp := NewBaseApp()
+	gin.ForceConsoleColor()
+	if !baseApp.Env.IsProd {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
+	engine := gin.New()
 	server := &AppServer{
 		GinEngine: engine,
 		Env:       baseApp.Env,
@@ -43,7 +48,6 @@ func (s *AppServer) setupMiddleware() {
 
 	if !s.Env.IsProd {
 		startSwagger(s.GinEngine, s.Env)
-		// CORS sempre aplicado antes das rotas
 		s.GinEngine.Use(cors.New(cors.Config{
 			AllowOrigins:     []string{"http://localhost:3000"},
 			AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -61,7 +65,7 @@ func (s *AppServer) setupMiddleware() {
 // Registra todas as rotas
 func (s *AppServer) SetupRoutes(controllers *controller.Controller) {
 	mid := middleware.NewMiddlewareHandler(controllers)
-	router.NewRouter(s.GinEngine, mid, controllers) // passe controllers aqui
+	router.NewRouter(s.GinEngine, mid, controllers)
 }
 
 // Inicia o servidor
