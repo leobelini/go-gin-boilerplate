@@ -20,5 +20,7 @@ func NewAuthHandler(group *gin.RouterGroup, middleware *middleware.MiddlewareHan
 	router.POST("/password-recovery", handler.PasswordRecovery)
 	router.PUT("/reset-password/:token", handler.ResetPassword)
 	router.POST("/sign-in", handler.SignIn)
+	router.POST("/refresh", handler.Refresh)
+
 	router.Use(middleware.JWTAuthMiddleware()).GET("/me", handler.Me)
 }

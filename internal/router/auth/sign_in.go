@@ -32,11 +32,13 @@ func (h *AuthHandler) SignIn(c *gin.Context) {
 		return
 	}
 
-	token, err := h.controllers.Auth.SignIn(req.Email, req.Password, c.Request.Context())
+	token, refreshToken, err := h.controllers.Auth.SignIn(req.Email, req.Password, c.Request.Context())
 	if err != nil {
 		utils.HandleError(c, err)
 		return
 	}
+
+	c.SetCookie("refresh_token", refreshToken, 7*24*60*60, "/", "", false, true)
 
 	c.JSON(200, SignInResponse{Token: token})
 }
