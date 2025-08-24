@@ -28,18 +28,18 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 
 	if err := h.controllers.User.CreateUser(req.Name, req.Email, req.Password, ctx); err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 
 	user, err := h.controllers.User.GetUserByEmail(req.Email, ctx)
 	if err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 

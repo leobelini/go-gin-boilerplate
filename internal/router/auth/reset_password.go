@@ -25,7 +25,7 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 
 	var req ResetPasswordRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 
@@ -34,7 +34,7 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	ctx := c.Request.Context()
 	err := h.controllers.Auth.ResetPassword(req.Password, token, ctx)
 	if err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 

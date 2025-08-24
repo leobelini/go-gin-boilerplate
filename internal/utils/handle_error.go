@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func HandleValidationError(c *gin.Context, err error) {
+func HandleError(c *gin.Context, err error) {
 	message, isInternal := GetErrorMessage(err)
 
 	data := api.ErrorResponse{

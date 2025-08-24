@@ -20,12 +20,12 @@ func (h *AuthHandler) SignUpConfirm(c *gin.Context) {
 	token := c.Param("token")
 
 	if token == "" {
-		utils.HandleValidationError(c, utils.CreateAppError("INVALID_TOKEN", false))
+		utils.HandleError(c, utils.CreateAppError("INVALID_TOKEN", false))
 		return
 	}
 
 	if err := h.controllers.Auth.SignUpConfirm(token, c.Request.Context()); err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 

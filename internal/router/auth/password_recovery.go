@@ -25,14 +25,14 @@ func (h *AuthHandler) PasswordRecovery(c *gin.Context) {
 	var req PasswordRecoveryRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 
 	ctx := c.Request.Context()
 	err := h.controllers.Auth.PasswordRecovery(req.Email, ctx)
 	if err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 

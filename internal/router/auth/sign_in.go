@@ -28,13 +28,13 @@ type SignInResponse struct {
 func (h *AuthHandler) SignIn(c *gin.Context) {
 	var req SignInRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 
 	token, err := h.controllers.Auth.SignIn(req.Email, req.Password, c.Request.Context())
 	if err != nil {
-		utils.HandleValidationError(c, err)
+		utils.HandleError(c, err)
 		return
 	}
 
