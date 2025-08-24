@@ -31,8 +31,9 @@ func LoadEnv() (*dto.DtoEnvApp, error) {
 		},
 		IsProd: viper.GetBool("isProduction"),
 		App: dto.DtoEnvAppApp{
-			Name: viper.GetString("app.name"),
-			URL:  viper.GetString("app.url"),
+			Name:      viper.GetString("app.name"),
+			URL:       viper.GetString("app.url"),
+			JWTSecret: viper.GetString("app.jwtSecret"),
 		},
 		Smtp: dto.DtoEnvAppSmtp{
 			Host: viper.GetString("smtp.host"),

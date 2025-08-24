@@ -16,8 +16,9 @@ type DtoEnvAppRedis struct {
 }
 
 type DtoEnvAppApp struct {
-	Name string
-	URL  string
+	Name      string
+	URL       string
+	JWTSecret string
 }
 
 type DtoEnvAppSmtp struct {

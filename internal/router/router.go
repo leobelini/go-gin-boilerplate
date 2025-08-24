@@ -2,6 +2,7 @@ package router
 
 import (
 	"leobelini/cashly/internal/controller"
+	"leobelini/cashly/internal/middleware"
 	"leobelini/cashly/internal/router/auth"
 	"leobelini/cashly/internal/router/user"
 
@@ -18,8 +19,8 @@ import (
 
 // @host      localhost:8080
 // @BasePath  /api/v1
-func NewRouter(gin *gin.Engine, controllers *controller.Controller) {
+func NewRouter(gin *gin.Engine, middleware *middleware.MiddlewareHandler, controllers *controller.Controller) {
 	group := gin.Group("/api/v1")
 	user.NewUserHandler(group, controllers)
-	auth.NewAuthHandler(group, controllers)
+	auth.NewAuthHandler(group, middleware, controllers)
 }

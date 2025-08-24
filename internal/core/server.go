@@ -5,6 +5,7 @@ import (
 	"leobelini/cashly/internal/controller"
 	"leobelini/cashly/internal/core/app"
 	"leobelini/cashly/internal/core/dto"
+	"leobelini/cashly/internal/middleware"
 	"leobelini/cashly/internal/router"
 
 	"github.com/gin-contrib/cors"
@@ -59,7 +60,8 @@ func (s *AppServer) setupMiddleware() {
 
 // Registra todas as rotas
 func (s *AppServer) SetupRoutes(controllers *controller.Controller) {
-	router.NewRouter(s.GinEngine, controllers) // passe controllers aqui
+	mid := middleware.NewMiddlewareHandler(controllers)
+	router.NewRouter(s.GinEngine, mid, controllers) // passe controllers aqui
 }
 
 // Inicia o servidor
