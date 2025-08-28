@@ -21,6 +21,7 @@ func NewAuthHandler(group *gin.RouterGroup, middleware *middleware.MiddlewareHan
 	router.PUT("/reset-password/:token", handler.ResetPassword)
 	router.POST("/sign-in", handler.SignIn)
 	router.POST("/refresh", handler.Refresh)
+	router.POST("/logout", handler.Logout)
 
 	router.Use(middleware.JWTAuthMiddleware()).GET("/me", handler.Me)
 }
