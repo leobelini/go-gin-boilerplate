@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"encoding/json"
 	"leobelini/cashly/internal/utils"
 	"net/http"
 
@@ -39,11 +38,5 @@ func (h *AuthHandler) Me(c *gin.Context) {
 		Name:  user.Name,
 	}
 
-	respJSON, err := json.Marshal(resp)
-	if err != nil {
-		utils.HandleError(c, err)
-		return
-	}
-
-	c.JSON(http.StatusOK, respJSON)
+	c.JSON(http.StatusOK, resp)
 }
